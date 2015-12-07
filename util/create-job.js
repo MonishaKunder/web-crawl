@@ -6,16 +6,18 @@ module.exports=function (queue,url){
 
   var job = queue.create('web crawler', {
     title: 'crawlling',
-    url:url
-  }).removeOnComplete( true ).attempts(3).backoff( {delay: 1000*3, type:'fixed'} ).ttl(1000*15).save();
+    url:url,
+    reattempt:false
+  }).removeOnComplete( true ).attempts(3).ttl(1000*20).save();
 
   job.on('complete', function(result){
     console.log('Successfully crawled '+job.data.url+'  TotalLinks '+result);
   })
 
   job.on('failed attempt', function(errorMessage, doneAttempts){
-    console.log('Job failed'+doneAttempts);
-    job.state('inactive').save()
+    job.data.reattempt=true;
+    job.state('inactive').save();
+    console.log('Job failed: Retry '+job.data.url);
   })
 
   job.on('failed', function(errorMessage){

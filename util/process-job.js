@@ -9,11 +9,10 @@ var pagesVisited={};
 
 module.exports=function (queue,job,db,done){
   var url=job.data.url;
-  if(pagesVisited[url])
+  if(pagesVisited[url] && !job.data.reattempt)
     return;
   var parsedUrl = new URL(url);
   var baseUrl = parsedUrl.protocol + "//" + parsedUrl.hostname;
-  console.log(url)
   pagesVisited[url]=true;
   request(url, function(error, response, body) {
     if(error)
