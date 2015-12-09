@@ -27,4 +27,6 @@ module.exports=function (queue,url){
   job.on('progress',function(progress, data){
   console.log('\r  job #' + job.id + ' ' + progress + '% complete with data ', data );
   });
+
+  return job;
 }

@@ -4,6 +4,6 @@ module.exports = function(db,obj,callback) {
 			if (err)
 				return callback(err);
 			else
-				return callback();
+				return callback(null,doc);
 		});
 }

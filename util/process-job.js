@@ -39,7 +39,7 @@ module.exports=function (queue,job,db,done){
         name:$(this).attr('name'),
         content:$(this).attr('content')
       };
-      addToDb(db,obj,function(err){
+      addToDb(db,obj,function(err,doc){
         if(err)
           console.log(err)
       });

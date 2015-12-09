@@ -1,5 +1,7 @@
 
 var kue = require('kue')
+var express = require('express') 
+var bodyParser = require('body-parser');
 
 var connection=require('./util/connection')
 var createJob=require('./util/create-job')
@@ -9,6 +11,15 @@ var queue = kue.createQueue();
 var pagesVisited={};
 var count=0
 var db;
+
+var app = express();
+app.use(bodyParser.urlencoded({ extended: false}));
+
+app.listen(3000);
+
+app.get('/',function(req,res){
+    res.json({'status':'up'})
+})
 
 
 connection('mongodb://localhost:27017/test',function(error,dbObj) {
@@ -23,7 +34,6 @@ connection('mongodb://localhost:27017/test',function(error,dbObj) {
     }
   })
 queue.watchStuckJobs(500)
-queue.watchStuckJobs()
 
 queue.on('error',function(err){
   console.log(err)
@@ -32,8 +42,8 @@ queue.on('error',function(err){
 process.on('uncaughtException',function(err){
   console.log(err)
 })
-
-createJob(queue,'http://www.example.com')
+  
+job=createJob(queue,'http://www.example.com')
 
 
 
